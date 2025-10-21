@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pesquisa de Satisfação</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+
+  <body>
+    <section class="tela" id="tela-avaliacao">
+      <header>
+        <h1 class="titulo">Pesquisa de Satisfação</h1>
+      </header>
+
+      <main class="avaliacao-container">
+        <div class="choice" data-column="muito_insatisfeito">
+          <img src="img/Vermelho-Raiva.png" alt="Péssimo" />
+          <p>Péssimo</p>
+        </div>
+        <div class="choice" data-column="insatisfeito">
+          <img src="img/Laranja-Ruim.png" alt="Ruim" />
+          <p>Ruim</p>
+        </div>
+        <div class="choice" data-column="neutro">
+          <img src="img/Amarelo-Neutro.png" alt="Neutro" />
+          <p>Neutro</p>
+        </div>
+        <div class="choice" data-column="satisfeito">
+          <img src="img/Verde-Bom.png" alt="Bom" />
+          <p>Bom</p>
+        </div>
+        <div class="choice" data-column="muito_satisfeito">
+          <img src="img/Verde-Otimo.png" alt="Muito Bom" />
+          <p>Muito Bom</p>
+        </div>
+      </main>
+    </section>
+
+    <section class="tela agradecimento" id="tela-agradecimento">
+      <div class="fundo-timer">
+        <svg>
+          <circle class="base" cx="150" cy="150" r="140"></circle>
+          <circle id="progress" cx="150" cy="150" r="140"></circle>
+        </svg>
+      </div>
+
+      <div class="mensagem">
+        <h2 id="mensagem-texto">🎉 Muito obrigado pelo seu feedback!</h2>
+      </div>
+    </section>
+
+    <script src="js/script.js"></script>
+  </body>
+</html>
