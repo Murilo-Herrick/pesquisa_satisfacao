@@ -52,14 +52,6 @@
     </div>
 
     <script>
-      const firebaseConfig = {
-        apiKey: "AIzaSyDC_Q1bsdvk0FDV1P82doFommI-9qCmIVw",
-        authDomain: "pesquisasatisfacao-20d26.firebaseapp.com",
-        projectId: "pesquisasatisfacao-20d26",
-      };
-      firebase.initializeApp(firebaseConfig);
-      const db = firebase.firestore();
-
       const ctx = document.getElementById("chart").getContext("2d");
       const chart = new Chart(ctx, {
         type: "bar",
@@ -125,7 +117,7 @@
       };
 
       const eventSource = new EventSource(
-        "http://localhost:90902/api/stream-avaliacoes"
+        "http://10.110.18.10:90902/api/stream-avaliacoes"
       );
 
       eventSource.onmessage = function (event) {
