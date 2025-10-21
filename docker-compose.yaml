@@ -1,7 +1,7 @@
 services:
   db:
     image: mysql:8.0
-    container_name: mysql_db
+    container_name: mysql_pesquisa
     environment:
       MYSQL_ROOT_PASSWORD: 123456
       MYSQL_DATABASE: pesquisa_satisfacao
