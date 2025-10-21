@@ -17,7 +17,7 @@ import com.atiex.pesquisa_satisfacao.Repository.AvaliacaoRepository;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping
+@RequestMapping("/api")
 public class AvaliacaoController {
     
     @Autowired

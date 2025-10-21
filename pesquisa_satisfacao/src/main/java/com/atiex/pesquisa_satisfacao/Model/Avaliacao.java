@@ -1,13 +1,10 @@
 package com.atiex.pesquisa_satisfacao.Model;
 
-import java.time.LocalDateTime;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,27 +17,28 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class Avaliacao {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
 
-    @NotNull
-    @Column(nullable = false)
-    private LocalDateTime horario = LocalDateTime.now();
-
     @PositiveOrZero
+    @Column(name = "muito_insatisfeito")
     private Integer muitoInsatisfeito;
 
     @PositiveOrZero
+    @Column(name = "insatisfeito")
     private Integer insatisfeito;
 
     @PositiveOrZero
+    @Column(name = "neutro")
     private Integer neutro;
 
     @PositiveOrZero
+    @Column(name = "satisfeito")
     private Integer satisfeito;
 
     @PositiveOrZero
+    @Column(name = "muito_satisfeito")
     private Integer muitoSatisfeito;
 }
