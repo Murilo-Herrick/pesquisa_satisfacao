@@ -15,7 +15,7 @@ services:
       - api
   
   api:
-    build: .
+    build: ./pesquisa_satisfacao
     container_name: pesquisa_satisfacao
     depends_on:
       - db
@@ -26,7 +26,18 @@ services:
       SPRING_DATASOURCE_PASSWORD: 123456
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
     ports:
-      - "9092:8081"
+      - "90902:8081"
+    networks:
+      - api
+
+  nginx:
+    build: ./nginx
+    ports:
+      - "80802:82"
+    volumes:
+      - ./html:/usr/share/nginx/html:ro
+    depends_on:
+      - api
     networks:
       - api
 

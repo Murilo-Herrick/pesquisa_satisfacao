@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const column = choice.dataset.column;
 
-      fetch("http://10.110.12.49/avaliacao", {
+      fetch("http://10.110.18.10:90902/avaliacao", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ coluna: column }),

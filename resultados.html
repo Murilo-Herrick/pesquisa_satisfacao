@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard de Avaliações</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore-compat.js"></script>
+    <style>
+      body {
+        background-color: #1e1e2f;
+        color: #f8f9fa;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      .container {
+        padding-top: 40px;
+        max-width: 1200px;
+        width: 90%;
+        margin: 0 auto;
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 40px;
+        font-weight: 700;
+        color: #ffffff;
+        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+      }
+      .chart-wrapper {
+        position: relative;
+        width: 100%;
+        height: 60vh; /* altura proporcional à tela */
+      }
+      canvas {
+        background-color: #2c2c3e;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Pesquisa de Satisfação</h1>
+      <div class="chart-wrapper">
+        <canvas id="chart"></canvas>
+      </div>
+    </div>
+
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyDC_Q1bsdvk0FDV1P82doFommI-9qCmIVw",
+        authDomain: "pesquisasatisfacao-20d26.firebaseapp.com",
+        projectId: "pesquisasatisfacao-20d26",
+      };
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+
+      const ctx = document.getElementById("chart").getContext("2d");
+      const chart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: [
+            "😡 Muito Insatisfeito",
+            "🙁 Insatisfeito",
+            "😐 Neutro",
+            "🙂 Satisfeito",
+            "😃 Muito Satisfeito",
+          ],
+          datasets: [
+            {
+              label: "Número de Avaliações",
+              data: [0, 0, 0, 0, 0],
+              backgroundColor: [
+                "#ff4d4d",
+                "#ff9f43",
+                "#ffd60a",
+                "#9eff6e",
+                "#00d98f",
+              ],
+              borderRadius: 10,
+              borderSkipped: false,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function (context) {
+                  return context.dataset.data[context.dataIndex] + " respostas";
+                },
+              },
+            },
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              precision: 0,
+              ticks: { stepSize: 1, color: "#f8f9fa" },
+            },
+            x: {
+              ticks: {
+                color: ["#ff4d4d", "#ff9f43", "#ffd60a", "#9eff6e", "#00d98f"],
+                font: { size: 18 },
+              },
+            },
+          },
+        },
+      });
+
+      const mapping = {
+        "Muito Insatisfeito": 0,
+        Insatisfeito: 1,
+        Neutro: 2,
+        Satisfeito: 3,
+        "Muito Satisfeito": 4,
+      };
+
+      const eventSource = new EventSource(
+        "http://localhost:90902/api/stream-avaliacoes"
+      );
+
+      eventSource.onmessage = function (event) {
+        const data = JSON.parse(event.data);
+        const counts = [
+          data["Muito Insatisfeito"] || 0,
+          data["Insatisfeito"] || 0,
+          data["Neutro"] || 0,
+          data["Satisfeito"] || 0,
+          data["Muito Satisfeito"] || 0,
+        ];
+        chart.data.datasets[0].data = counts;
+        chart.update();
+      };
+    </script>
+  </body>
+</html>
