@@ -8,27 +8,30 @@ document.addEventListener("DOMContentLoaded", () => {
   const duracao = 5;
 
   choices.forEach((choice) => {
-    choice.addEventListener("click", () => {
-      choices.forEach((c) => c.classList.remove("selected"));
-
-      choice.classList.add("selected");
-
-      const column = choice.dataset.column;
-      fetch("/api/avaliacao", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ coluna: column }),
-      })
-        .then(async (response) => {
-          if (!response.ok) throw new Error(`Erro HTTP ${response.status}`);
-          await response.json();
-          mostrarAgradecimento(true);
-        })
-        .catch(() => mostrarAgradecimento(false));
-    });
-
-    choice.addEventListener("mousedown", (e) => e.preventDefault());
+    choice.addEventListener("click", handleChoice);
+    choice.addEventListener("touchstart", handleChoice); // suporte a touch
+    // choice.addEventListener("mousedown", (e) => e.preventDefault()); // opcional
   });
+
+  function handleChoice(e) {
+    e.preventDefault(); // evita seleção de texto em touch
+    choices.forEach((c) => c.classList.remove("selected"));
+    e.currentTarget.classList.add("selected");
+
+    const column = e.currentTarget.dataset.column;
+
+    fetch("/api/avaliacao", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ coluna: column }),
+    })
+      .then(async (response) => {
+        if (!response.ok) throw new Error(`Erro HTTP ${response.status}`);
+        await response.json();
+        mostrarAgradecimento(true);
+      })
+      .catch(() => mostrarAgradecimento(false));
+  }
 
   function mostrarAgradecimento(sucesso) {
     telaAvaliacao.style.display = "none";

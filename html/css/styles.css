@@ -56,6 +56,7 @@ header {
   transition: transform 0.3s ease;
   outline: none;
   border: #000;
+  touch-action: manipulation;
 }
 
 .choice img {
@@ -67,6 +68,7 @@ header {
   padding: 5px;
   display: block;
   outline: none !important;
+  pointer-events: auto;
 }
 
 .choice p {
@@ -161,6 +163,15 @@ header {
   .titulo { font-size: 1.5rem; }
   .choice img { width: 90px; height: 90px; }
   .avaliacao-container { gap: 30px; }
+  .fundo-timer { width: 250px; height: 250px; }
+  .fundo-timer svg { width: 250px; height: 250px; }
+}
+
+/* Tablet 7 polegadas */
+@media (min-width: 601px) and (max-width: 800px) {
+  .titulo { font-size: 2.2rem; }
+  .choice img { width: 90px; height: 90px; padding: 10px; }
+  .avaliacao-container { gap: 50px; justify-content: space-around; }
   .fundo-timer { width: 250px; height: 250px; }
   .fundo-timer svg { width: 250px; height: 250px; }
 }
