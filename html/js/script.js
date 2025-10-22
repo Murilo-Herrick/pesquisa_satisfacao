@@ -12,12 +12,24 @@ document.addEventListener("DOMContentLoaded", () => {
     choice.addEventListener("touchstart", handleChoice, { passive: true }); // touch para tablet
   });
 
-  function handleChoice(e) {
-    e.preventDefault(); // evita seleção de texto
-    choices.forEach((c) => c.classList.remove("selected"));
-    e.currentTarget.classList.add("selected"); // currentTarget garante container
+  choices.forEach((choice) => {
+    choice.addEventListener("click", handleChoice);
+    choice.addEventListener("touchstart", handleChoice, { passive: true }); // tablet
+  });
 
-    const column = e.currentTarget.dataset.column;
+  choices.forEach((choice) => {
+    choice.addEventListener("click", handleChoice);
+    choice.addEventListener("touchstart", handleChoice, { passive: false }); // passive false permite preventDefault
+  });
+
+  function handleChoice(e) {
+    e.preventDefault(); // evita seleção de texto no touch
+    const choice = e.currentTarget;
+    choices.forEach((c) => c.classList.remove("selected"));
+    choice.classList.add("selected");
+
+    const column = choice.dataset.column;
+
     fetch("/api/avaliacao", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -30,7 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .catch(() => mostrarAgradecimento(false));
   }
-
 
   function mostrarAgradecimento(sucesso) {
     telaAvaliacao.style.display = "none";
