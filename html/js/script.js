@@ -9,17 +9,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   choices.forEach((choice) => {
     choice.addEventListener("click", handleChoice);
-    choice.addEventListener("touchstart", handleChoice); // suporte a touch
-    // choice.addEventListener("mousedown", (e) => e.preventDefault()); // opcional
+    choice.addEventListener("touchstart", handleChoice, { passive: true }); // touch para tablet
   });
 
   function handleChoice(e) {
-    e.preventDefault(); // evita seleção de texto em touch
+    e.preventDefault(); // evita seleção de texto
     choices.forEach((c) => c.classList.remove("selected"));
-    e.currentTarget.classList.add("selected");
+    e.currentTarget.classList.add("selected"); // currentTarget garante container
 
     const column = e.currentTarget.dataset.column;
-
     fetch("/api/avaliacao", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -32,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .catch(() => mostrarAgradecimento(false));
   }
+
 
   function mostrarAgradecimento(sucesso) {
     telaAvaliacao.style.display = "none";

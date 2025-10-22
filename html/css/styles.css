@@ -68,7 +68,7 @@ header {
   padding: 5px;
   display: block;
   outline: none !important;
-  pointer-events: auto;
+  pointer-events: none;
 }
 
 .choice p {
@@ -174,4 +174,16 @@ header {
   .avaliacao-container { gap: 50px; justify-content: space-around; }
   .fundo-timer { width: 250px; height: 250px; }
   .fundo-timer svg { width: 250px; height: 250px; }
+}
+
+@media (min-width: 601px) and (max-width: 1024px) and (orientation: landscape) {
+  .titulo { font-size: 2.5rem; }
+  .choice img { width: 100px; height: 100px; padding: 10px; }
+  .avaliacao-container { 
+    gap: 40px; 
+    justify-content: space-around;
+    flex-wrap: nowrap; /* mantém em linha horizontal */
+  }
+  .fundo-timer { width: 200px; height: 200px; }
+  .fundo-timer svg { width: 200px; height: 200px; }
 }
