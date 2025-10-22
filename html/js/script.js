@@ -9,17 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   choices.forEach((choice) => {
     choice.addEventListener("click", handleChoice);
-    choice.addEventListener("touchstart", handleChoice, { passive: true }); // touch para tablet
-  });
-
-  choices.forEach((choice) => {
-    choice.addEventListener("click", handleChoice);
-    choice.addEventListener("touchstart", handleChoice, { passive: true }); // tablet
-  });
-
-  choices.forEach((choice) => {
-    choice.addEventListener("click", handleChoice);
-    choice.addEventListener("touchstart", handleChoice, { passive: false }); // passive false permite preventDefault
+    choice.addEventListener("touchstart", handleChoice, { passive: false });
   });
 
   function handleChoice(e) {

@@ -70,7 +70,7 @@ header {
   padding: 5px;
   display: block;
   outline: none !important;
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 .choice p {
