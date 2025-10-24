@@ -16,6 +16,8 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import com.atiex.pesquisa_satisfacao.Model.Avaliacao;
 import com.atiex.pesquisa_satisfacao.Repository.AvaliacaoRepository;
 
+import jakarta.transaction.Transactional;
+
 @RestController
 @RequestMapping("/api")
 public class AvaliacaoSSEController {
@@ -55,6 +57,7 @@ public class AvaliacaoSSEController {
         });
     }
 
+    @Transactional
     private Map<String, Integer> getAvaliacoes() {
         Avaliacao a = avaliacaoRepository.findById(1).orElse(new Avaliacao());
         Map<String, Integer> map = new HashMap<>();
