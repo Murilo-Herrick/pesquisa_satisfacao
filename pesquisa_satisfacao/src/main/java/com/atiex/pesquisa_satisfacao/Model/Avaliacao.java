@@ -1,17 +1,26 @@
 package com.atiex.pesquisa_satisfacao.Model;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+
+import com.atiex.pesquisa_satisfacao.enums.AvaliacaoEnum;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "avaliacoes")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,26 +28,16 @@ import lombok.NoArgsConstructor;
 public class Avaliacao {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @PositiveOrZero
-    @Column(name = "muito_insatisfeito")
-    private Integer muitoInsatisfeito;
+    @Column(name = "horario", nullable = false)
+    private LocalDateTime horario = ZonedDateTime.now(ZoneId.of("America/Sao_Paulo")).toLocalDateTime();
 
-    @PositiveOrZero
-    @Column(name = "insatisfeito")
-    private Integer insatisfeito;
+    @Column(name = "nota", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AvaliacaoEnum nota;
 
-    @PositiveOrZero
-    @Column(name = "neutro")
-    private Integer neutro;
-
-    @PositiveOrZero
-    @Column(name = "satisfeito")
-    private Integer satisfeito;
-
-    @PositiveOrZero
-    @Column(name = "muito_satisfeito")
-    private Integer muitoSatisfeito;
+    @Column(name = "canal_divulgacao", nullable = true)
+    private String canalDivulgacao;
 }

@@ -9,8 +9,6 @@
       rel="stylesheet"
     />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore-compat.js"></script>
     <style>
       body {
         background-color: #1e1e2f;
@@ -18,51 +16,124 @@
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       }
       .container {
-        padding-top: 40px;
+        padding-top: 70px;
         max-width: 1200px;
-        width: 90%;
+        width: 95%;
         margin: 0 auto;
       }
       h1 {
         text-align: center;
-        margin-bottom: 40px;
+        margin-bottom: 30px;
         font-weight: 700;
         color: #ffffff;
         text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+        font-size: 1.8rem;
       }
-      .chart-wrapper {
+      .charts-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+      }
+      .chart-container {
+        flex: 1 1 45%;
+        min-width: 300px;
+        height: 400px;
         position: relative;
-        width: 100%;
-        height: 60vh; /* altura proporcional à tela */
+      }
+      .chart-container h3 {
+        color: #f8f9fa;
+        font-weight: 600;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        font-size: 1.2rem;
       }
       canvas {
         background-color: #2c2c3e;
         border-radius: 12px;
-        padding: 20px;
+        padding: 10px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+      }
+      .legend-canais {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 10px;
+        gap: 10px;
+      }
+      .legend-item {
+        display: flex;
+        align-items: center;
+        font-size: 0.9rem;
+        color: #f8f9fa;
+      }
+      .legend-color {
+        width: 16px;
+        height: 16px;
+        margin-right: 5px;
+        border-radius: 4px;
+        display: inline-block;
+      }
+      @media (max-width: 768px) {
+        .chart-container {
+          flex: 1 1 100%;
+          height: 300px;
+          margin-top: 50px;
+        }
+        h1 {
+          font-size: 1.5rem;
+        }
+      }
+      @media (max-width: 480px) {
+        .chart-container {
+          height: 250px;
+          margin-top: 50px;
+        }
+        h1 {
+          font-size: 1.3rem;
+        }
       }
     </style>
   </head>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
   <body>
     <div class="container">
       <h1>Pesquisa de Satisfação</h1>
-      <div class="chart-wrapper">
-        <canvas id="chart"></canvas>
+      <div class="charts-wrapper">
+        <!-- Gráfico de Notas -->
+        <div class="chart-container">
+          <h3 class="text-center mb-2">Avaliações</h3>
+          <canvas id="chartNotas"></canvas>
+        </div>
+        <!-- Gráfico de Canais -->
+        <div class="chart-container">
+          <h3 class="text-center mb-2">Canais de divulgações</h3>
+          <canvas id="chartCanais"></canvas>
+          <div class="legend-canais" id="legendCanais"></div>
+        </div>
       </div>
+    </div>
+    <div class="container text-center mt-4">
+      <button id="exportExcel" class="btn btn-secondary">
+        Exportar para Excel
+      </button>
     </div>
 
     <script>
-      const ctx = document.getElementById("chart").getContext("2d");
-      const chart = new Chart(ctx, {
+      // === Mapeamento para emojis e labels ===
+      const mappingNotas = {
+        muito_insatisfeito: "😡 Muito Insatisfeito",
+        insatisfeito: "🙁 Insatisfeito",
+        neutro: "😐 Neutro",
+        satisfeito: "🙂 Satisfeito",
+        muito_satisfeito: "😃 Muito Satisfeito",
+      };
+
+      // === Gráfico de Notas ===
+      const ctxNotas = document.getElementById("chartNotas").getContext("2d");
+      const chartNotas = new Chart(ctxNotas, {
         type: "bar",
         data: {
-          labels: [
-            "😡 Muito Insatisfeito",
-            "🙁 Insatisfeito",
-            "😐 Neutro",
-            "🙂 Satisfeito",
-            "😃 Muito Satisfeito",
-          ],
+          labels: Object.values(mappingNotas),
           datasets: [
             {
               label: "Número de Avaliações",
@@ -82,55 +153,127 @@
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              callbacks: {
-                label: function (context) {
-                  return context.dataset.data[context.dataIndex] + " respostas";
-                },
-              },
-            },
-          },
+          plugins: { legend: { display: false } },
           scales: {
-            y: {
-              beginAtZero: true,
-              precision: 0,
-              ticks: { stepSize: 1, color: "#f8f9fa" },
-            },
+            y: { beginAtZero: true, ticks: { stepSize: 1, color: "#f8f9fa" } },
             x: {
               ticks: {
                 color: ["#ff4d4d", "#ff9f43", "#ffd60a", "#9eff6e", "#00d98f"],
-                font: { size: 18 },
+                font: { size: 16 },
               },
             },
           },
         },
       });
 
-      const mapping = {
-        "Muito Insatisfeito": 0,
-        Insatisfeito: 1,
-        Neutro: 2,
-        Satisfeito: 3,
-        "Muito Satisfeito": 4,
-      };
+      // === Gráfico de Canais ===
+      const ctxCanais = document.getElementById("chartCanais").getContext("2d");
+      const chartCanais = new Chart(ctxCanais, {
+        type: "bar",
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: "Número de Avaliações por Canal",
+              data: [],
+              backgroundColor: [],
+              borderRadius: 10,
+              borderSkipped: false,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, ticks: { stepSize: 1, color: "#f8f9fa" } },
+            x: { ticks: { color: "#f8f9fa", font: { size: 14 } } },
+          },
+        },
+      });
 
+      const legendCanais = document.getElementById("legendCanais");
+      const canalColors = [
+        "#ff4d4d",
+        "#ff9f43",
+        "#ffd60a",
+        "#9eff6e",
+        "#00d98f",
+        "#3399ff",
+        "#9966ff",
+        "#ff66cc",
+        "#66ffcc",
+      ];
+
+      // === SSE único combinando notas e canais ===
       const eventSource = new EventSource(
-        "/api/stream-avaliacoes"
+        "https://pesquisa-satisfacao-925015353452.southamerica-east1.run.app/api/stream-notas"
       );
+      // OBS: se no backend você quiser, pode enviar ambos juntos em stream-notas
 
       eventSource.onmessage = function (event) {
         const data = JSON.parse(event.data);
-        const counts = [
-          data["Muito Insatisfeito"] || 0,
-          data["Insatisfeito"] || 0,
-          data["Neutro"] || 0,
-          data["Satisfeito"] || 0,
-          data["Muito Satisfeito"] || 0,
-        ];
-        chart.data.datasets[0].data = counts;
-        chart.update();
+
+        // Atualiza gráfico de notas
+        const notasData = data.notas || {};
+        chartNotas.data.datasets[0].data = Object.keys(mappingNotas).map(
+          (k) => notasData[k] || 0
+        );
+        chartNotas.update();
+
+        // Atualiza gráfico de canais
+        const canaisData = data.canais || {};
+        const labels = Object.keys(canaisData);
+        chartCanais.data.labels = labels;
+        chartCanais.data.datasets[0].data = Object.values(canaisData);
+        chartCanais.data.datasets[0].backgroundColor = labels.map(
+          (_, i) => canalColors[i % canalColors.length]
+        );
+        chartCanais.update();
+
+        // Atualiza legenda de canais
+        legendCanais.innerHTML = "";
+        labels.forEach((label, i) => {
+          const item = document.createElement("div");
+          item.className = "legend-item";
+          const colorBox = document.createElement("span");
+          colorBox.className = "legend-color";
+          colorBox.style.backgroundColor = canalColors[i % canalColors.length];
+          item.appendChild(colorBox);
+          item.appendChild(document.createTextNode(label));
+          legendCanais.appendChild(item);
+        });
+        document.getElementById("exportExcel").addEventListener("click", () => {
+          // --- Dados do gráfico de notas ---
+          const notas = chartNotas.data.datasets[0].data;
+          const notasLabels = chartNotas.data.labels;
+
+          const notasSheet = notasLabels.map((label, i) => ({
+            Avaliação: label,
+            Quantidade: notas[i],
+          }));
+
+          // --- Dados do gráfico de canais ---
+          const canais = chartCanais.data.datasets[0].data;
+          const canaisLabels = chartCanais.data.labels;
+
+          const canaisSheet = canaisLabels.map((label, i) => ({
+            Canal: label,
+            Quantidade: canais[i],
+          }));
+
+          // --- Criar workbook ---
+          const wb = XLSX.utils.book_new();
+          const wsNotas = XLSX.utils.json_to_sheet(notasSheet);
+          const wsCanais = XLSX.utils.json_to_sheet(canaisSheet);
+
+          XLSX.utils.book_append_sheet(wb, wsNotas, "Avaliações");
+          XLSX.utils.book_append_sheet(wb, wsCanais, "Canais");
+
+          // --- Salvar arquivo ---
+          XLSX.writeFile(wb, "Relatorio_Pesquisa.xlsx");
+        });
       };
     </script>
   </body>
