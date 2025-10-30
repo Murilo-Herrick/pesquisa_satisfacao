@@ -77,7 +77,7 @@ A arquitetura é formada por dois contêineres independentes e integrados:
 ---
 
 ## 📂 Estrutura do Projeto
-'''
+```
 pesquisa_satisfacao/
 ├── html/ # Frontend (Nginx + HTML/CSS/JS)
 │ ├── img/ # Imagens utilizadas no site
@@ -92,7 +92,7 @@ pesquisa_satisfacao/
 │ ├── Dockerfile # Imagem Docker da API
 │
 └── README.md
-'''
+```
 
 ---
 
