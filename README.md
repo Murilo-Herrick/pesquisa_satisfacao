@@ -79,17 +79,17 @@ A arquitetura é formada por dois contêineres independentes e integrados:
 ## 📂 Estrutura do Projeto
 ```
 pesquisa_satisfacao/
-├── html/ # Frontend (Nginx + HTML/CSS/JS)
-│ ├── img/ # Imagens utilizadas no site
-│ ├── index.html # Página principal da pesquisa
-│ ├── resultados.html # Dashboard de resultados e exportação XLSX
-│ ├── nginx.conf # Configuração do servidor Nginx
-│ ├── Dockerfile # Imagem Docker do frontend
+├── html/
+│ ├── img/
+│ ├── index.html (Página principal da pesquisa)
+│ ├── resultados.html (Dashboard de resultados e exportação XLSX)
+│ ├── nginx.conf 
+│ ├── Dockerfile 
 │
-├── pesquisa_satisfacao/ # API Spring Boot (Java)
-│ ├── src/ # Código-fonte da aplicação
-│ ├── pom.xml # Dependências Maven
-│ ├── Dockerfile # Imagem Docker da API
+├── pesquisa_satisfacao/ (API Spring Boot)
+│ ├── src/
+│ ├── pom.xml 
+│ ├── Dockerfile
 │
 └── README.md
 ```
